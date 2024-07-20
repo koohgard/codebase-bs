@@ -13,5 +13,7 @@ public class BookMapConfig : IEntityTypeConfiguration<Book>
 		builder.Property(x => x.Description).HasMaxLength(1000);
 		builder.Property(x => x.Price).IsRequired();
 		builder.Property(x => x.IsDeleted).IsRequired();
+		builder.Property(x => x.OutOfStock).IsRequired();
+		builder.Property(x => x.RowVersion).IsRowVersion();
 	}
 }

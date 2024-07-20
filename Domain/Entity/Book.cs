@@ -6,6 +6,8 @@ public class Book
     public string Description { get; set; }
     public decimal Price { get; set; }
     public bool IsDeleted { get; set; }
+    public bool OutOfStock { get; set; }
+    public byte[] RowVersion{ get; set; }
     public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     public virtual ICollection<StockTransaction> StockTransactions { get; set; }
 }
