@@ -36,7 +36,9 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(new[]{
         })
  );
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options => 
+        options.UseNpgsql(connectionString: connectionString,
+                          npgsqlOptionsAction: npgsqlOptions => npgsqlOptions.MigrationsAssembly("Api")));
 
 builder.Services.AddScoped<ITransactionManager, TransactionManager>();
 
