@@ -1,0 +1,36 @@
+# Output folders
+bin/
+obj/
+
+# User-specific files
+*.suo
+*.user
+*.suo
+*.user
+*.userosscache
+
+# Mono Auto Generated Files
+mono_crash.*
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Visual Studio Code directories
+.vscode/
+
+# User-specific files
+*.suo
+*.user
+*.suo
+*.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
