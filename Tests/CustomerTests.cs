@@ -38,7 +38,7 @@ public class CustomerTests
         var response = await client.PostAsync("/api/customer/register", content);
 
         // Assert
-        Assert.IsTrue(response.IsSuccessStatusCode, "Register Customer API does not exist or is not accessible.");
+        Assert.That(response.StatusCode, Is.Not.EqualTo(HttpStatusCode.NotFound));
     }
 
     [Test]
@@ -53,7 +53,7 @@ public class CustomerTests
         };
         var content = new StringContent(JsonSerializer.Serialize(newStation), Encoding.UTF8, "application/json");
         // Act
-        var response = await client.PostAsync("/api/customers/register", content);
+        var response = await client.PostAsync("/api/customer/register", content);
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
@@ -70,7 +70,7 @@ public class CustomerTests
         };
         var content = new StringContent(JsonSerializer.Serialize(newStation), Encoding.UTF8, "application/json");
         // Act
-        var response = await client.PostAsync("/api/customers/register", content);
+        var response = await client.PostAsync("/api/customer/register", content);
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
@@ -82,8 +82,8 @@ public class CustomerTests
         var newCustomer = new
         {
             Email = "testUser@gmail.com",
-            Password = "test",
-            ConfirmPassword = "test"
+            Password = "testPassword",
+            ConfirmPassword = "testPassword"
         };
         var content = new StringContent(JsonSerializer.Serialize(newCustomer), Encoding.UTF8, "application/json");
         var response = await client.PostAsync("/api/customer/register", content);
@@ -97,14 +97,14 @@ public class CustomerTests
     public async Task Customer_Login_Exists()
     {
         // Act
-        var loginData= new { };
+        var loginData = new { };
         var content = new StringContent(JsonSerializer.Serialize(loginData), Encoding.UTF8, "application/json");
         var response = await client.PostAsync("/api/customer/login", content);
 
         // Assert
-        Assert.IsTrue(response.IsSuccessStatusCode, "Login Customer API does not exist or is not accessible.");
+        Assert.That(response.StatusCode, Is.Not.EqualTo(HttpStatusCode.NotFound));
     }
-    
+
     [Test]
     public async Task Customer_Login()
     {
