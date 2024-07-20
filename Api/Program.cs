@@ -1,8 +1,19 @@
 
 using Abstraction.Command.Customer.Register;
 using Application.Customer;
+using Domain.Entity;
+using Api.Middleware;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Infrastructure.Context;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,12 +32,13 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(new[]{
          typeof(Program).Assembly,
-         
-         
-         
          typeof(RegisterCommandHandler).Assembly
         })
  );
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped<ITransactionManager, TransactionManager>();
 
 var app = builder.Build();
 
@@ -38,7 +50,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<TransactionMiddleware>();
 app.MapControllers();
 
 app.Run();

@@ -1,5 +1,6 @@
-﻿
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+
 namespace Infrastructure.Context;
 public interface ITransactionManager
 {
