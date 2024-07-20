@@ -2,6 +2,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using Abstraction.Command.Customer.CustomerOrders;
 
 namespace Tests;
 [TestFixture]
@@ -73,6 +74,26 @@ public class CustomerTests
         var response = await client.PostAsync("/api/customer/register", content);
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+    }
+
+    [Test]
+    public async Task Customer_Register_DuplicateEmail()
+    {
+        // Act
+        var newCustomer = new
+        {
+            Email = "testUser@gmail.com",
+            Password = "testPassword",
+            ConfirmPassword = "testPassword"
+        };
+        var content = new StringContent(JsonSerializer.Serialize(newCustomer), Encoding.UTF8, "application/json");
+        var response = await client.PostAsync("/api/customer/register", content);
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+
+        var duplicateResponse = await client.PostAsync("/api/customer/register", content);
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
     }
 
     [Test]
@@ -151,4 +172,50 @@ public class CustomerTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
     }
     #endregion
+    #region Orders
+
+    [Test]
+    public async Task Customer_Orders_Exists()
+    {
+        // Act        
+        var response = await client.GetAsync($"/api/customer/orders?pageIndex={1}&pageSize={10}");
+
+        // Assert
+        Assert.That(response.StatusCode, Is.Not.EqualTo(HttpStatusCode.NotFound));
+    }
+
+    [Test]
+    public async Task Customer_Orders_Unauthorized()
+    {
+        // Act        
+        var response = await client.GetAsync($"/api/customer/orders?pageIndex={1}&pageSize={10}");
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+    }
+
+
+    [Test]
+    public async Task Customer_Orders_GetOrders()
+    {
+
+        // Act        
+
+        var loginResult = await TestUtils.RegisterAndLogin(client);
+
+        //todo insert orders
+
+        var response = await client.GetAsync($"/api/customer/orders?pageIndex={1}&pageSize={10}");
+
+        // Assert        
+        response.EnsureSuccessStatusCode();
+        var contentString = await response.Content.ReadAsStringAsync();
+        var orders = JsonSerializer.Deserialize<List<CustomerOrdersQueryResult>>(contentString, TestUtils.JsonOptions);
+
+        Assert.IsNotNull(orders);
+        Assert.IsNotEmpty(orders);
+    }
+
+    #endregion
+
 }

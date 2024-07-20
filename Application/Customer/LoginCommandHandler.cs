@@ -1,16 +1,12 @@
 ﻿using Abstraction.Command.Customer.Login;
 using MediatR;
 
-namespace Application;
+namespace Application.Customer;
 
 public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginCommandResult>
 {
-    private readonly IMediator mediator;
-
-    public LoginCommandHandler(IMediator mediator)
+    public LoginCommandHandler()
     {
-
-        this.mediator = mediator;
     }
 
     public async Task<LoginCommandResult> Handle(LoginCommand request, CancellationToken cancellationToken)
