@@ -13,10 +13,17 @@
     <PackageReference Include="MediatR" Version="12.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\" />
-    <Folder Include="Command\Customer\CustomerOrders\" />
-    <Folder Include="Customer\Loign\" />
+  <ItemGroup>    
+    <Folder Include="Command\Book\" />
+    <Folder Include="Command\Book\CreateBook\" />
+    <Folder Include="Command\Book\GetBooks\" />
+    <Folder Include="Command\Book\UpdateStock\" />
+    <Folder Include="Command\Customer\GetCustomerOrders\" />
+    <Folder Include="Command\Order\" />
+    <Folder Include="Command\Order\CreateOrder\" />
+    <Folder Include="Command\Order\GetOrders\" />
+    <Folder Include="Command\Order\GetOrder\" />
+    <Folder Include="Command\Order\GetStatistics\" />    
   </ItemGroup>
 
 </Project>

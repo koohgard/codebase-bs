@@ -2,7 +2,8 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using Abstraction.Command.Customer.CustomerOrders;
+using Abstraction.Command;
+using Abstraction.Command.Customer.GetCustomerOrders;
 
 namespace Tests;
 [TestFixture]
@@ -46,13 +47,13 @@ public class CustomerTests
     public async Task Customer_Register_ConfirmPassword_ReturnsValidationError()
     {
         // Arrange
-        var newStation = new
+        var newCustomer = new
         {
             Email = "testUser@gmail.com",
             Password = "testPassword",
             ConfirmPassword = "testP"
         };
-        var content = new StringContent(JsonSerializer.Serialize(newStation), Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonSerializer.Serialize(newCustomer), Encoding.UTF8, "application/json");
         // Act
         var response = await client.PostAsync("/api/customer/register", content);
         // Assert
@@ -63,13 +64,13 @@ public class CustomerTests
     public async Task Customer_Register_PasswordLength_ReturnsValidationError()
     {
         // Arrange
-        var newStation = new
+        var newCustomer = new
         {
             Email = "testUser@gmail.com",
             Password = "test",
             ConfirmPassword = "test"
         };
-        var content = new StringContent(JsonSerializer.Serialize(newStation), Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonSerializer.Serialize(newCustomer), Encoding.UTF8, "application/json");
         // Act
         var response = await client.PostAsync("/api/customer/register", content);
         // Assert
@@ -203,17 +204,17 @@ public class CustomerTests
 
         var loginResult = await TestUtils.RegisterAndLogin(client);
 
-        //todo insert orders
+        //TODO insert orders
 
         var response = await client.GetAsync($"/api/customer/orders?pageIndex={1}&pageSize={10}");
 
         // Assert        
         response.EnsureSuccessStatusCode();
         var contentString = await response.Content.ReadAsStringAsync();
-        var orders = JsonSerializer.Deserialize<List<CustomerOrdersQueryResult>>(contentString, TestUtils.JsonOptions);
+        var orders = JsonSerializer.Deserialize<PagingResult<GetCustomerOrdersQueryResult>>(contentString, TestUtils.JsonOptions);
 
         Assert.IsNotNull(orders);
-        Assert.IsNotEmpty(orders);
+        Assert.IsNotEmpty(orders.Data);
     }
 
     #endregion

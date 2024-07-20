@@ -1,6 +1,5 @@
 
 using Abstraction.Command.Customer.Register;
-using Api.Controller;
 using Application.Customer;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -21,8 +20,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(new[]{
-        typeof(Program).Assembly,
-        typeof(RegisterCommandHandler).Assembly
+         typeof(Program).Assembly,
+         
+         
+         
+         typeof(RegisterCommandHandler).Assembly
         })
  );
 

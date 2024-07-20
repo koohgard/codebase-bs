@@ -11,7 +11,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginCommandRes
 
     public async Task<LoginCommandResult> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        //todo implement 
+        //TODO implement 
         throw new NotImplementedException();
     }
 }

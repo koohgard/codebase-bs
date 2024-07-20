@@ -12,7 +12,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterC
 
     public async Task<RegisterCommandResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        //todo implement
+        //TODO implement
         throw new NotImplementedException();
     }
 }

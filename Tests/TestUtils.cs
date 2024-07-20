@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using Abstraction.Command.Book.CreateBook;
 using Abstraction.Command.Customer.Login;
 
 namespace Tests;
@@ -31,4 +32,24 @@ public static class TestUtils
         var result = JsonSerializer.Deserialize<LoginCommandResult>(stringContent, JsonOptions);
         return result;
     }
+
+    public static async Task<CreateBookCommandResult> CreateBook(HttpClient client)
+    {
+        var newBook = new
+        {
+            Title = "BookTitle",
+            Description = "Description",
+            Price = 100,
+            Stock = 100,
+        };
+        var content = new StringContent(JsonSerializer.Serialize(newBook), Encoding.UTF8, "application/json");
+        var response = await client.PostAsync("/api/book", content);
+        response.EnsureSuccessStatusCode();
+        var stringContent = await response.Content.ReadAsStringAsync();
+        var result = JsonSerializer.Deserialize<CreateBookCommandResult>(stringContent, JsonOptions);
+        return result;
+    }
+
+
+
 }
