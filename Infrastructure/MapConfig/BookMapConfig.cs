@@ -14,6 +14,16 @@ public class BookMapConfig : IEntityTypeConfiguration<Book>
 		builder.Property(x => x.Description).HasMaxLength(1000);
 		builder.Property(x => x.Price).IsRequired();
 		builder.Property(x => x.IsDeleted).IsRequired();
-		builder.Property(x => x.OutOfStock).IsRequired();		
+		builder.Property(x => x.OutOfStock).IsRequired();
+		builder.Property(x => x.RowVersion).HasColumnName("xmin")
+			.HasColumnType("xid")
+			.IsRowVersion()
+			.IsRequired()
+			.HasConversion(
+				new ValueConverter<byte[], uint>(
+					convertToProviderExpression: v => BitConverter.ToUInt32(v, 0),
+					convertFromProviderExpression: v => BitConverter.GetBytes(v)
+				)
+			);
 	}
 }

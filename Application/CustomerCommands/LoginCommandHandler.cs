@@ -55,7 +55,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginCommandRes
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.UtcNow.AddHours(1),
+            Expires = DateTime.UtcNow.AddHours(100),
             Audience = Utils.JwtSettings.Audience,
             Issuer = Utils.JwtSettings.Issuer,
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
