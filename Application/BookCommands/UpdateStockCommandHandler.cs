@@ -4,6 +4,7 @@ using AutoMapper;
 using Domain.Entity;
 using Infrastructure.Context;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.BookCommands;
 
@@ -18,7 +19,7 @@ public class UpdateStockCommandHandler : IRequestHandler<UpdateStockCommand, Upd
         this.mapper = mapper;
     }
     public async Task<UpdateStockCommandResult> Handle(UpdateStockCommand request, CancellationToken cancellationToken)
-    {        
+    {
         var stockTransaction = new StockTransaction()
         {
             BookId = request.BookId,
@@ -29,7 +30,17 @@ public class UpdateStockCommandHandler : IRequestHandler<UpdateStockCommand, Upd
         await appDbContext.AddAsync(stockTransaction, cancellationToken);
         await appDbContext.SaveChangesAsync(cancellationToken);
 
-        // return mapper.Map<UpdateStockCommandResult>();
-        return new UpdateStockCommandResult();
+        var book = await this.appDbContext.Books.FirstOrDefaultAsync(x => x.Id == request.BookId, cancellationToken);
+        var stock = await appDbContext.StockTransactions.Where(x => x.BookId == request.BookId)
+                                                        .SumAsync(x => x.Count * (int)x.TransactionFactor, cancellationToken);
+        book.OutOfStock = stock <= 0;
+        appDbContext.Update<Book>(book);
+        await appDbContext.SaveChangesAsync(cancellationToken);
+        return new UpdateStockCommandResult()
+        {
+            BookId = book.Id,
+            Stock = stock,
+            BookTitle = book.Title
+        };
     }
 }

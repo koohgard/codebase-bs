@@ -43,7 +43,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
         {
             BookId = request.BookId,
             Count = request.Count,
-            TransactionFactor = TransactionFactor.Increase,
+            TransactionFactor = TransactionFactor.Decrease,
             TransactionType = TransactionType.AdminUpdate,
             CreateDateTime = DateTime.UtcNow,
         };

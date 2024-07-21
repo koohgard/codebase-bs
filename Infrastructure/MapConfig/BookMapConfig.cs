@@ -1,6 +1,7 @@
 ﻿using Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.MapConfig;
 public class BookMapConfig : IEntityTypeConfiguration<Book>
 {
@@ -13,7 +14,6 @@ public class BookMapConfig : IEntityTypeConfiguration<Book>
 		builder.Property(x => x.Description).HasMaxLength(1000);
 		builder.Property(x => x.Price).IsRequired();
 		builder.Property(x => x.IsDeleted).IsRequired();
-		builder.Property(x => x.OutOfStock).IsRequired();
-		builder.Property(x => x.RowVersion).IsRowVersion();
+		builder.Property(x => x.OutOfStock).IsRequired();		
 	}
 }

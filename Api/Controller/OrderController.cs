@@ -43,8 +43,8 @@ public class OrderController : ControllerBase
         {
             PageIndex = pageindex,
             PageSize = pageSize,
-            StartDate = startDate,
-            EndDate = endDate
+            StartDate = startDate.ToUniversalTime(),
+            EndDate = endDate.ToUniversalTime()
         };
         var orders = await mediator.Send(query);
         return Ok(orders);
