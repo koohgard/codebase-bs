@@ -1,4 +1,7 @@
 1- You can open the project with VS Code and run its tests.
+dotnet restore 
+dotnet test
+========================
 or 
 2- Create a new database and setup the connection string in appsetting.json.
 .\api\appsetting.json
