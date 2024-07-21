@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Abstraction.Command.Book.CreateBook;
 using Abstraction.Command.Customer.Login;
+using Abstraction.Command.Order.CreateOrder;
 
 namespace Tests;
 
@@ -43,7 +44,7 @@ public static class TestUtils
             Title = "BookTitle",
             Description = "Description",
             Price = 100,
-            Stock = 100,
+            InitStock = 100,
         };
         var content = new StringContent(JsonSerializer.Serialize(newBook), Encoding.UTF8, "application/json");
         var response = await client.PostAsync("/api/book", content);
@@ -53,6 +54,20 @@ public static class TestUtils
         return result;
     }
 
+    public static async Task<CreateOrderCommandResult> CreateOrder(HttpClient client)
+    {
+        var createBookResult = await CreateBook(client);
+        var newOrder = new
+        {
+            BookId = createBookResult.Id,
+            Count = 1
+        };
+        var content = new StringContent(JsonSerializer.Serialize(newOrder), Encoding.UTF8, "application/json");
+        var response = await client.PostAsync("/api/order", content);
+        response.EnsureSuccessStatusCode();
+        var stringContent = await response.Content.ReadAsStringAsync();
+        var result = JsonSerializer.Deserialize<CreateOrderCommandResult>(stringContent, JsonOptions);
+        return result;
 
-
+    }
 }

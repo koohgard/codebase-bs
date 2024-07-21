@@ -5,9 +5,8 @@ using Infrastructure.Context;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
-namespace Application.Customer;
+namespace Application.CustomerCommands;
 
 public class GetCustomerOrdersQueryHandler : IRequestHandler<GetCustomerOrdersQuery, PagingResult<GetCustomerOrdersQueryResult>>
 {
@@ -25,6 +24,7 @@ public class GetCustomerOrdersQueryHandler : IRequestHandler<GetCustomerOrdersQu
     {
         var userId = Utils.GetCurrentUserId(httpContextAccessor.HttpContext);
         var query = from OrderDetail in this.appDbContext.OrderDetails
+                    where OrderDetail.Order.UserId == userId
                     select new GetCustomerOrdersQueryResult
                     {
                         Id = OrderDetail.Id,

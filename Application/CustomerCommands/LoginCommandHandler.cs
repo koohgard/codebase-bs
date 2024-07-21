@@ -2,19 +2,16 @@
 using System.Security.Claims;
 using System.Text;
 using Abstraction.Command.Customer.Login;
-using Abstraction.Common;
 using Abstraction.Exception;
 using Domain.Entity;
 using Infrastructure.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 
 
-namespace Application.Customer;
+namespace Application.CustomerCommands;
 
 public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginCommandResult>
 {

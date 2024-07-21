@@ -5,7 +5,7 @@ using Domain.Entity;
 using Infrastructure.Context;
 using MediatR;
 
-namespace Application.Customer;
+namespace Application.BookCommands;
 
 public class UpdateStockCommandHandler : IRequestHandler<UpdateStockCommand, UpdateStockCommandResult>
 {

@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Customer;
+namespace Application.BookCommands;
 
 public class GetBooksQueryHandler : IRequestHandler<GetBooksQuery, PagingResult<GetBooksQueryResult>>
 {
@@ -26,7 +26,7 @@ public class GetBooksQueryHandler : IRequestHandler<GetBooksQuery, PagingResult<
                              BookId = gItems.Key,
                              Stock = gItems.Sum(x => x.Count * (int)x.TransactionFactor)
                          };
-        
+
         var query = from book in this.appDbContext.Books
                     join stock in stockQuery on book.Id equals stock.BookId into stocks
                     from stock in stocks.DefaultIfEmpty()

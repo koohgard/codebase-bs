@@ -4,7 +4,7 @@ using Abstraction.Command.Customer.Register;
 using Abstraction.Common;
 using Api.Middleware;
 using Application;
-using Application.Customer;
+using Application.CustomerCommands;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure.Context;

@@ -7,7 +7,7 @@ using Infrastructure.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Customer;
+namespace Application.CustomerCommands;
 
 public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterCommandResult>
 {

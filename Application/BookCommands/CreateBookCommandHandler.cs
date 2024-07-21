@@ -5,7 +5,7 @@ using Domain.Entity;
 using Infrastructure.Context;
 using MediatR;
 
-namespace Application.Customer;
+namespace Application.BookCommands;
 
 public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, CreateBookCommandResult>
 {
@@ -19,7 +19,7 @@ public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand, Creat
     }
     public async Task<CreateBookCommandResult> Handle(CreateBookCommand request, CancellationToken cancellationToken)
     {
-        var book = this.mapper.Map<Book>(request);
+        var book = this.mapper.Map<Domain.Entity.Book>(request);
         book.IsDeleted = false;
         book.OutOfStock = false;
         await appDbContext.AddAsync(book, cancellationToken);

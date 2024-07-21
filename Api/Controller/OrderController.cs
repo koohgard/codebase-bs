@@ -39,7 +39,13 @@ public class OrderController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<PagingResult<GetOrdersQueryResult>>> GetOrders([FromQuery] DateTime startDate, [FromQuery] DateTime endDate, [FromQuery] int pageindex = 1, [FromQuery] int pageSize = 10)
     {
-        var query = new GetOrdersQuery() { PageIndex = pageindex, PageSize = pageSize };
+        var query = new GetOrdersQuery()
+        {
+            PageIndex = pageindex,
+            PageSize = pageSize,
+            StartDate = startDate,
+            EndDate = endDate
+        };
         var orders = await mediator.Send(query);
         return Ok(orders);
     }

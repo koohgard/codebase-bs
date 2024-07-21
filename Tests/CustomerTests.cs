@@ -31,7 +31,7 @@ public class CustomerTests
     {
         client.Dispose();
     }
-    
+
 
     #region Register
     [Test]
@@ -207,9 +207,7 @@ public class CustomerTests
 
         // Act        
 
-        var loginResult = await TestUtils.RegisterAndLogin(client);
-
-        //TODO insert orders
+        await TestUtils.CreateOrder(client);
 
         var response = await client.GetAsync($"/api/customer/orders?pageIndex={1}&pageSize={10}");
 
