@@ -37,6 +37,7 @@ public static class TestUtils
 
     public static async Task<CreateBookCommandResult> CreateBook(HttpClient client)
     {
+        await RegisterAndLogin(client);
         var newBook = new
         {
             Title = "BookTitle",

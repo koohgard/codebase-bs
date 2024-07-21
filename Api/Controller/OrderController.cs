@@ -3,6 +3,7 @@ using Abstraction.Command.Order.CreateOrder;
 using Abstraction.Command.Order.GetOrder;
 using Abstraction.Command.Order.GetOrders;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controller;
@@ -18,12 +19,14 @@ public class OrderController : ControllerBase
         this.mediator = mediator;
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<CreateOrderCommandResult>> CreateOrder([FromBody] CreateOrderCommand command)
     {
         var result = await mediator.Send(command);
         return Ok(result);
     }
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<GetOrderQueryResult>> GetOrder(int id)
     {
@@ -32,6 +35,7 @@ public class OrderController : ControllerBase
         return Ok(order);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<ActionResult<PagingResult<GetOrdersQueryResult>>> GetOrders([FromQuery] DateTime startDate, [FromQuery] DateTime endDate, [FromQuery] int pageindex = 1, [FromQuery] int pageSize = 10)
     {

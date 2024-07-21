@@ -1,9 +1,11 @@
-﻿using MediatR;
+﻿using Abstraction.Enum;
+using MediatR;
 
 namespace Abstraction.Command.Book.UpdateStock;
 
 public class UpdateStockCommand : IRequest<UpdateStockCommandResult>
 {
-    public int Id { get; set; }
-    public int Stock { get; set; }
+    public int BookId { get; set; }
+    public int Count{ get; set; }
+    public TransactionFactor TransactionFactor { get; set; }
 }

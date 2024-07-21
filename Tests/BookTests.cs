@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Abstraction.Command;
 using Abstraction.Command.Book.GetBooks;
+using Application;
 
 namespace Tests;
 [TestFixture]
@@ -21,6 +22,7 @@ public class BookTests
     {
         var testFactory = new TestAppFactoy();
         client = testFactory.CreateClient();
+        testFactory.ResetDatabase();
     }
 
     [TearDown]
@@ -45,14 +47,14 @@ public class BookTests
     [Test]
     public async Task Book_Create_ReturnsValidationError()
     {
-        //TODO login with admin 
+        await TestUtils.RegisterAndLogin(client);
         // Arrange
         var newBook = new
         {
-            Title = "BookTitle",
-            Description = "Description",
+            Title = "",
+            Description = "",
             Price = 0,
-            Stock = 0,
+            InitStock = 0
         };
         var content = new StringContent(JsonSerializer.Serialize(newBook), Encoding.UTF8, "application/json");
         // Act
@@ -67,8 +69,10 @@ public class BookTests
         // Act
         var UpdateBook = new
         {
-            Id = 1,
-            Stock = 20
+            Title = "BookTitle",
+            Description = "Description",
+            Price = 100,
+            InitStock = 10
         };
         var content = new StringContent(JsonSerializer.Serialize(UpdateBook), Encoding.UTF8, "application/json");
         var response = await client.PatchAsync("/api/book", content);
@@ -79,14 +83,14 @@ public class BookTests
     [Test]
     public async Task Book_Create()
     {
-        //TODO login with admin 
+        await TestUtils.RegisterAndLogin(client);
         // Arrange
         var newBook = new
         {
             Title = "BookTitle",
             Description = "Description",
             Price = 100,
-            Stock = 100,
+            InitStock = 10
         };
         var content = new StringContent(JsonSerializer.Serialize(newBook), Encoding.UTF8, "application/json");
         // Act
@@ -116,17 +120,18 @@ public class BookTests
     [Test]
     public async Task Book_UpdateStock_ValidationError()
     {
-        //TODO login with admin 
+        await TestUtils.RegisterAndLogin(client);
         // Act
         var UpdateBook = new
         {
-            Id = 0,
-            Stock = -1
+            BookId = 0,
+            Count = 0,
+            TransactionFactor = 1
         };
         var content = new StringContent(JsonSerializer.Serialize(UpdateBook), Encoding.UTF8, "application/json");
         var response = await client.PatchAsync("/api/book", content);
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
     }
 
     [Test]
@@ -135,8 +140,9 @@ public class BookTests
         // Act
         var UpdateBook = new
         {
-            Id = 1,
-            Stock = 20
+            BookId = 1,
+            Count = 3,
+            TransactionFactor = 1
         };
         var content = new StringContent(JsonSerializer.Serialize(UpdateBook), Encoding.UTF8, "application/json");
         var response = await client.PatchAsync("/api/book", content);
@@ -152,13 +158,14 @@ public class BookTests
         // Act
         var updateBook = new
         {
-            Id = createBookResult.Id,
-            Stock = 20
+            BookId = createBookResult.Id,
+            Count = 3,
+            TransactionFactor = 1
         };
         var content = new StringContent(JsonSerializer.Serialize(updateBook), Encoding.UTF8, "application/json");
         var response = await client.PatchAsync("/api/book", content);
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
     }
     #endregion
     #region GetBooks
@@ -166,20 +173,20 @@ public class BookTests
     public async Task GetBooks_Exists()
     {
         // Act        
-        var response = await client.GetAsync($"/api/books?pageIndex={1}&pageSize={10}");
+        var response = await client.GetAsync($"/api/book?pageIndex={1}&pageSize={10}");
 
         // Assert
         Assert.That(response.StatusCode, Is.Not.EqualTo(HttpStatusCode.NotFound));
     }
 
     [Test]
-    public async Task GetBooks_GetOrders()
+    public async Task GetBooks_GetBooks()
     {
 
         // Act        
         var createBookResult = await TestUtils.CreateBook(client);
 
-        var response = await client.GetAsync($"/api/books?pageIndex={1}&pageSize={10}");
+        var response = await client.GetAsync($"/api/book?pageIndex={1}&pageSize={10}");
 
         // Assert        
         response.EnsureSuccessStatusCode();

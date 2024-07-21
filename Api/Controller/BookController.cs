@@ -3,6 +3,7 @@ using Abstraction.Command.Book.CreateBook;
 using Abstraction.Command.Book.GetBooks;
 using Abstraction.Command.Book.UpdateStock;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controller;
@@ -19,6 +20,7 @@ public class BookController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<CreateBookCommandResult>> CreateBook([FromBody] CreateBookCommand command)
     {
         var result = await mediator.Send(command);
@@ -26,13 +28,14 @@ public class BookController : ControllerBase
     }
 
     [HttpPatch]
+    [Authorize]
     public async Task<ActionResult<UpdateStockCommandResult>> UpdateStock([FromBody] UpdateStockCommand command)
     {
         var result = await mediator.Send(command);
         return Ok(result);
     }
 
-    [HttpGet]
+    [HttpGet]    
     public async Task<ActionResult<PagingResult<GetBooksQueryResult>>> GetBooks([FromQuery] int pageindex = 1, [FromQuery] int pageSize = 10)
     {
         var query = new GetBooksQuery() { PageIndex = pageindex, PageSize = pageSize };
