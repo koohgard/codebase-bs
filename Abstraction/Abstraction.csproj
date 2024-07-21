@@ -23,7 +23,8 @@
     <Folder Include="Command\Order\CreateOrder\" />
     <Folder Include="Command\Order\GetOrders\" />
     <Folder Include="Command\Order\GetOrder\" />
-    <Folder Include="Command\Order\GetStatistics\" />    
+    <Folder Include="Command\Order\GetStatistics\" />
+    <Folder Include="Enum\" />    
   </ItemGroup>
 
 </Project>

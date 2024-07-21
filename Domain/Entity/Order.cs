@@ -1,3 +1,5 @@
+using Abstraction.Enum;
+
 namespace Domain.Entity;
 public class Order
 {
