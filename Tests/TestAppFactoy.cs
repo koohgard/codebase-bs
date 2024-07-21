@@ -10,6 +10,7 @@ public class TestAppFactoy : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseEnvironment("Test");
         builder.ConfigureServices(services =>
         {
             var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
@@ -26,8 +27,7 @@ public class TestAppFactoy : WebApplicationFactory<Program>
                 var db = scopedServices.GetRequiredService<AppDbContext>();
                 db.Database.EnsureCreated();
             }
-        });
-        builder.UseEnvironment("Test");
+        });        
     }
     public void ResetDatabase()
     {

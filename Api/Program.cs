@@ -64,8 +64,9 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(new[]{
  );
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+Env.EnvironmentName = builder.Environment.EnvironmentName;
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseNpgsql(connectionString: connectionString,
                           npgsqlOptionsAction: npgsqlOptions => npgsqlOptions.MigrationsAssembly("Api")));
@@ -118,7 +119,7 @@ app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 if (app.Environment.EnvironmentName != "Test")
 {
-    app.UseMiddleware<TransactionMiddleware>();
+    app.UseMiddleware<TransactionMiddleware>();    
 }
 app.MapControllers();
 

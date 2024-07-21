@@ -1,4 +1,5 @@
-﻿using Domain.Entity;
+﻿using Abstraction.Common;
+using Domain.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -15,16 +16,18 @@ public class BookMapConfig : IEntityTypeConfiguration<Book>
 		builder.Property(x => x.Price).IsRequired();
 		builder.Property(x => x.IsDeleted).IsRequired();
 		builder.Property(x => x.OutOfStock).IsRequired();
-		//this comment for inmemmory database
-		// builder.Property(x => x.RowVersion).HasColumnName("xmin")
-		// 	.HasColumnType("xid")
-		// 	.IsRowVersion()
-		// 	.IsRequired()
-		// 	.HasConversion(
-		// 		new ValueConverter<byte[], uint>(
-		// 			convertToProviderExpression: v => BitConverter.ToUInt32(v, 0),
-		// 			convertFromProviderExpression: v => BitConverter.GetBytes(v)
-		// 		)
-		// 	);
+		if (Env.EnvironmentName != "Test")
+		{
+			builder.Property(x => x.RowVersion).HasColumnName("xmin")
+		 	.HasColumnType("xid")
+		 	.IsRowVersion()
+		 	.IsRequired()
+		 	.HasConversion(
+		 		new ValueConverter<byte[], uint>(
+		 			convertToProviderExpression: v => BitConverter.ToUInt32(v, 0),
+		 			convertFromProviderExpression: v => BitConverter.GetBytes(v)
+		 		)
+		 	);
+		}
 	}
 }
