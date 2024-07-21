@@ -3,6 +3,7 @@ using Abstraction.Command.Customer.GetCustomerOrders;
 using Abstraction.Command.Customer.Login;
 using Abstraction.Command.Customer.Register;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controller;
@@ -31,7 +32,7 @@ public class CustomerController : ControllerBase
         var result = await mediator.Send(command);
         return Ok(result);
     }
-
+    [Authorize]
     [HttpGet("orders")]
     public async Task<ActionResult<PagingResult<GetCustomerOrdersQueryResult>>> GetCustomerOrders([FromQuery] int pageindex = 1, [FromQuery] int pageSize = 10)
     {

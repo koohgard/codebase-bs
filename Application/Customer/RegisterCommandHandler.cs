@@ -29,7 +29,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterC
         var user = this.mapper.Map<User>(request);
         user.Password = Utils.MD5Hash(request.Password);
         user.UserType = UserType.Customer;
-        user.LockoutDateTime = DateTime.Now;
+        user.LockoutDateTime = DateTime.UtcNow;
         user.LoginFaildCount = 0;
         await appDbContext.AddAsync(user, cancellationToken);
         await appDbContext.SaveChangesAsync(cancellationToken);

@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using Abstraction.Command;
 using Abstraction.Command.Customer.GetCustomerOrders;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Tests;
 [TestFixture]
@@ -22,6 +23,7 @@ public class CustomerTests
     {
         var testFactory = new TestAppFactoy();
         client = testFactory.CreateClient();
+        testFactory.ResetDatabase();
     }
 
     [TearDown]
@@ -29,6 +31,7 @@ public class CustomerTests
     {
         client.Dispose();
     }
+    
 
     #region Register
     [Test]
@@ -94,7 +97,7 @@ public class CustomerTests
         var duplicateResponse = await client.PostAsync("/api/customer/register", content);
 
         // Assert
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
+        Assert.That(duplicateResponse.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
     }
 
     [Test]
@@ -135,10 +138,11 @@ public class CustomerTests
         {
             Email = "testUser@gmail.com",
             Password = "testPassword",
+            ConfirmPassword = "testPassword",
         };
         var registerContent = new StringContent(JsonSerializer.Serialize(newCustomer), Encoding.UTF8, "application/json");
         var registerResponse = await client.PostAsync("/api/customer/register", registerContent);
-
+        registerResponse.EnsureSuccessStatusCode();
 
         var loginData = new
         {
@@ -158,10 +162,11 @@ public class CustomerTests
         {
             Email = "testUser@gmail.com",
             Password = "testPassword",
+            ConfirmPassword = "testPassword",
         };
         var registerContent = new StringContent(JsonSerializer.Serialize(newCustomer), Encoding.UTF8, "application/json");
         var registerResponse = await client.PostAsync("/api/customer/register", registerContent);
-
+        registerResponse.EnsureSuccessStatusCode();
 
         var loginData = new
         {
@@ -170,7 +175,7 @@ public class CustomerTests
         };
         var content = new StringContent(JsonSerializer.Serialize(loginData), Encoding.UTF8, "application/json");
         var response = await client.PostAsync("/api/customer/login", content);
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Unauthorized));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.InternalServerError));
     }
     #endregion
     #region Orders

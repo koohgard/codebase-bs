@@ -1,10 +1,14 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
+using Abstraction.Common;
+using Microsoft.AspNetCore.Http;
 
 namespace Application;
 
 public static class Utils
 {
+    public static JwtSettings JwtSettings { get; set; }
+
     public static string MD5Hash(string value)
     {
         var md5 = MD5.Create();
@@ -14,8 +18,12 @@ public static class Utils
         return result;
     }
 
-    public static int GetCurrentUserId()
+    public static int GetCurrentUserId(HttpContext httpContext)
     {
-        return 1;
+        var claim = httpContext.User.Claims.FirstOrDefault(c => c.Type == "user-id");
+        if (claim == null)
+            throw new UnauthorizedAccessException();
+        return Convert.ToInt32(claim.Value);
+
     }
 }

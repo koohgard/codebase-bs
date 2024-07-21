@@ -3,6 +3,7 @@ using Abstraction.Command.Customer.GetCustomerOrders;
 using Domain.Entity;
 using Infrastructure.Context;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -11,16 +12,18 @@ namespace Application.Customer;
 public class GetCustomerOrdersQueryHandler : IRequestHandler<GetCustomerOrdersQuery, PagingResult<GetCustomerOrdersQueryResult>>
 {
     private readonly AppDbContext appDbContext;
+    private readonly IHttpContextAccessor httpContextAccessor;
 
-    public GetCustomerOrdersQueryHandler(AppDbContext appDbContext)
+    public GetCustomerOrdersQueryHandler(AppDbContext appDbContext, IHttpContextAccessor httpContextAccessor)
     {
         this.appDbContext = appDbContext;
+        this.httpContextAccessor = httpContextAccessor;
     }
 
 
     public async Task<PagingResult<GetCustomerOrdersQueryResult>> Handle(GetCustomerOrdersQuery request, CancellationToken cancellationToken)
     {
-        var userId = Utils.GetCurrentUserId();
+        var userId = Utils.GetCurrentUserId(httpContextAccessor.HttpContext);
         var query = from OrderDetail in this.appDbContext.OrderDetails
                     select new GetCustomerOrdersQueryResult
                     {

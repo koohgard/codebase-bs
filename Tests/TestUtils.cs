@@ -15,6 +15,7 @@ public static class TestUtils
         {
             Email = "testUser@gmail.com",
             Password = "testPassword",
+            ConfirmPassword = "testPassword",
         };
         var registerContent = new StringContent(JsonSerializer.Serialize(newCustomer), Encoding.UTF8, "application/json");
         var registerResponse = await client.PostAsync("/api/customer/register", registerContent);
@@ -30,6 +31,7 @@ public static class TestUtils
         response.EnsureSuccessStatusCode();
         var stringContent = await response.Content.ReadAsStringAsync();
         var result = JsonSerializer.Deserialize<LoginCommandResult>(stringContent, JsonOptions);
+        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.Token);
         return result;
     }
 
