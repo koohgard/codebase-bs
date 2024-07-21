@@ -1,4 +1,5 @@
 ﻿using Abstraction.Command.Order.GetOrders;
+using Abstraction.Command.Order.GetStatistics;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public class StatisticsController : ControllerBase
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<GetOrderStatisticsQueryResult>>> GetOrders()
+    public async Task<ActionResult<IEnumerable<GetOrderStatisticsQueryResult>>> GetOrderStatistics()
     {
         var query = new GetOrderStatisticsQuery() { };
         var data = await mediator.Send(query);

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Abstraction.Command.Order.GetOrders;
+namespace Abstraction.Command.Order.GetStatistics;
 
 public class GetOrderStatisticsQueryValidator : AbstractValidator<GetOrderStatisticsQuery>
 {
